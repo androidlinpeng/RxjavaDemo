@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="msgcopy.com.myrxjava.MainActivity">
+    android:layout_height="match_parent">
 
     <Button
         android:id="@+id/button"
@@ -18,9 +17,38 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:gravity="center"
         android:text="TextView" />
+    <TextView
+        android:id="@+id/sendTv"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/mTv_git"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/sendTv"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/mTv_post"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/mTv_git"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="TextView" />
+
+
 
 </RelativeLayout>

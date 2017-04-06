@@ -11,7 +11,7 @@ public class SecondAvtivity extends AppCompatActivity {
         setContentView(R.layout.activity_second_avtivity);
 
         MetaChangedEvent metaChangedEvent = new MetaChangedEvent(100,
-                "发送消息", "。。。。。");
+                "发送消息", "main你好");
         RxBus.getInstance().post(metaChangedEvent);
 
     }

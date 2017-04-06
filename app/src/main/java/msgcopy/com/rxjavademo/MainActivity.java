@@ -22,27 +22,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "MainActivity";
 
-    TextView textView;
+    TextView textView,sendTv,mTv_git,mTv_post;
     private Subscriber<MovieBean> subscriber;
+
+    private Subscriber<UserEntity> subscriberUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.textView);
+        sendTv = (TextView) findViewById(R.id.sendTv);
+        mTv_git = (TextView) findViewById(R.id.mTv_git);
+        mTv_post = (TextView) findViewById(R.id.mTv_post);
 
         //订阅时间
         subscribeMetaChangedEvent();
-
+        //处理数据
         subscribeRequest();
+
         //使用Retrofit和Rxjava网络请求
+        //git请求
         subscribeHttp();
+        //post请求
+        subscribeHttpUser();
 
     }
 
-    //进行网络请求
-    private void subscribeHttp() {
-        subscriber = new Subscriber<MovieBean>() {
+    private void subscribeHttpUser() {
+
+        subscriberUser = new Subscriber<UserEntity>() {
             @Override
             public void onCompleted() {
                 Toast.makeText(MainActivity.this, "请求成功", Toast.LENGTH_SHORT).show();
@@ -52,13 +61,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onError(Throwable e) {
                 Toast.makeText(MainActivity.this, "Throwable：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.i(TAG,"onError" + e.getMessage());
+            }
+
+            @Override
+            public void onNext(UserEntity userEntity) {
+                Toast.makeText(MainActivity.this, "onNext："+userEntity.getFirst_name(), Toast.LENGTH_SHORT).show();
+                Log.i(TAG,"onNext:");
+                mTv_post.setText("Http: post:"+userEntity.getFirst_name());
+            }
+        };
+        HttpUser.getInstance().getHttpData(subscriberUser, "auto", "1","00000000");
+    }
+
+    //进行网络请求
+    private void subscribeHttp() {
+        subscriber = new Subscriber<MovieBean>() {
+            @Override
+            public void onCompleted() {
+//                Toast.makeText(MainActivity.this, "请求成功", Toast.LENGTH_SHORT).show();
+                Log.i(TAG,"onNext:");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+//                Toast.makeText(MainActivity.this, "Throwable：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.i(TAG,"" + e.getMessage());
             }
 
             @Override
             public void onNext(MovieBean movieBean) {
-                Toast.makeText(MainActivity.this, "onNext："+movieBean.getTitle(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "onNext："+movieBean.getTitle(), Toast.LENGTH_SHORT).show();
                 Log.i(TAG,"onNext:");
+                mTv_git.setText("Http: git:"+movieBean.getTitle());
             }
         };
         HttpMethods.getInstance().getHttpData(subscriber, 0, 10);
@@ -76,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .subscribe(new Action1<String>() {
                     @Override
                     public void call(String string) {
-                        textView.setText(string);
+                        textView.setText("加载数据："+string);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -95,12 +130,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .subscribe(new Action1<MetaChangedEvent>() {
                     @Override
                     public void call(MetaChangedEvent metaChangedEvent) {
-                        Toast.makeText(MainActivity.this, "发来的信息：" + metaChangedEvent.getArtistName(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, "发来的信息：" + metaChangedEvent.getArtistName(), Toast.LENGTH_SHORT).show();
+                        sendTv.setText("Secon发来的信息:"+metaChangedEvent.getArtistName());
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        Toast.makeText(MainActivity.this, "有异常。。。", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "throwable："+throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
         RxBus.getInstance().addSubscription(this, subscription);
